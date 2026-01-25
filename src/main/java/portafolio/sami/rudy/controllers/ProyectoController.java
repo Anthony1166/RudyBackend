@@ -32,7 +32,7 @@ public class ProyectoController {
         ProyectoDTO proyectoDTO = modelMapper.map(proyecto, ProyectoDTO.class);
         return proyectoDTO;
     }
-
+//-
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/proyecto")
     public ProyectoDTO registrarProyecto(@RequestBody ProyectoDTO proyectoDTO) {
