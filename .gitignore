@@ -32,8 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-# Ignorar el archivo de propiedades con secretos
-/src/main/resources/application.properties
 
 # Ignorar el archivo de perfil local que contiene secretos
 /src/main/resources/application-local.properties
