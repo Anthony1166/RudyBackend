@@ -26,7 +26,7 @@ public class CategoriaController {
         return categoriasDTO;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
     @PostMapping("/categoria")
     public CategoriaDTO registraCategoria(@RequestBody CategoriaDTO categoriaDTO) {
         Categoria categoria = modelMapper.map(categoriaDTO, Categoria.class);
@@ -35,7 +35,7 @@ public class CategoriaController {
         return categoriaDTO;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
     @PutMapping("/categoria/{id}")
     public CategoriaDTO actualizarCategoria(@PathVariable Long id ,@RequestBody CategoriaDTO categoriaDTO) {
         Categoria categoria = modelMapper.map(categoriaDTO, Categoria.class);
@@ -51,7 +51,7 @@ public class CategoriaController {
         return categoriaDTO;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
     @DeleteMapping("/categoria/{id}")
     public void eliminarCategoria(@PathVariable Long id) { categoriaServices.eliminarCategoria(id); }
 }

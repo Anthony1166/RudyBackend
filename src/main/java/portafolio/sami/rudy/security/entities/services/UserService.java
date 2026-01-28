@@ -20,7 +20,17 @@ public class UserService implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
+        
+        String roleName = user.getRole().getName().toUpperCase();
+        
+        // Lógica a prueba de balas:
+        // Si el rol ya empieza con "ROLE_", lo usamos tal cual.
+        // Si no, le añadimos el prefijo.
+        if (!roleName.startsWith("ROLE_")) {
+            roleName = "ROLE_" + roleName;
+        }
+
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -28,6 +38,7 @@ public class UserService implements UserDetailsService{
                 Collections.singletonList(authority)
         );
     }
+
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }

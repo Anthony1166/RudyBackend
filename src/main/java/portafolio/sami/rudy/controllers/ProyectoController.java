@@ -32,8 +32,8 @@ public class ProyectoController {
         ProyectoDTO proyectoDTO = modelMapper.map(proyecto, ProyectoDTO.class);
         return proyectoDTO;
     }
-//-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
     @PostMapping("/proyecto")
     public ProyectoDTO registrarProyecto(@RequestBody ProyectoDTO proyectoDTO) {
         Proyecto proyecto = modelMapper.map(proyectoDTO, Proyecto.class);
@@ -42,7 +42,7 @@ public class ProyectoController {
         return proyectoDTO;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
     @PutMapping("/proyecto/{id}")
     public ProyectoDTO actualizarProyecto(@PathVariable Long id, @RequestBody ProyectoDTO proyectoDTO) {
         Proyecto proyecto = modelMapper.map(proyectoDTO, Proyecto.class);
@@ -51,7 +51,7 @@ public class ProyectoController {
         return proyectoDTO;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
     @DeleteMapping("/proyecto/{id}")
     public void eliminarProyecto(@PathVariable Long id) { proyectoServices.eliminarProyecto(id); }
 
