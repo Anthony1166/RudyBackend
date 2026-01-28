@@ -21,7 +21,8 @@ public class ImagenController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // --- CORREGIDO ---
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/imagen")
     public ResponseEntity<ImagenDTO> subirImagen(@RequestParam("file") MultipartFile archivo,
                                                  @RequestParam("descripcion") String descripcion,
@@ -30,6 +31,7 @@ public class ImagenController {
         ImagenDTO dto = modelMapper.map(imagen, ImagenDTO.class);
         return ResponseEntity.ok(dto);
     }
+
     @GetMapping("/imagenes")
     public ResponseEntity<List<ImagenDTO>> obtenerTodasLasImagenes() {
         List<ImagenDTO> imagenes = imagenServices.listarImagenes()
@@ -38,13 +40,15 @@ public class ImagenController {
                 .toList();
         return ResponseEntity.ok(imagenes);
     }
+
     @GetMapping("/imagen/{id}")
     public ImagenDTO buscarPorId(@PathVariable Long id) {
         Imagen imagen = imagenServices.buscarPorId(id);
         return modelMapper.map(imagen, ImagenDTO.class);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // --- CORREGIDO ---
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/imagen/{id}")
     public ImagenDTO actualizarImagen(@PathVariable Long id, @RequestBody ImagenDTO imagenDTO) {
         Imagen imagenActualizada = modelMapper.map(imagenDTO, Imagen.class);
@@ -52,7 +56,8 @@ public class ImagenController {
         return modelMapper.map(imagen, ImagenDTO.class);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // --- CORREGIDO ---
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/imagen/{id}")
     public void eliminarImagen(@PathVariable Long id) {
         imagenServices.eliminarImagen(id);
@@ -65,5 +70,4 @@ public class ImagenController {
                 .map(img -> modelMapper.map(img, ImagenDTO.class))
                 .toList();
     }
-
 }
