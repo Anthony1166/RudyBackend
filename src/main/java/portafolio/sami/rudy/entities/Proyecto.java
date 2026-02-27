@@ -18,22 +18,23 @@ public class Proyecto {
     private Long idProyecto;
     
     private String titulo;
+    private String subtitulo;
     private String descripcion;
     private Integer anio;
 
-    // Relación Muchos a Muchos: Un proyecto tiene muchas categorías
     @ManyToMany
     @JoinTable(
-        name = "proyecto_categoria", // Nombre de la tabla intermedia en BD
+        name = "proyecto_categoria",
         joinColumns = @JoinColumn(name = "proyecto_id"),
         inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
-    // Quitamos @JsonIgnore aquí temporalmente. 
-    // Lo ideal será manejar esto con DTOs para evitar bucles, 
-    // pero en la entidad la relación debe existir.
     private List<Categoria> categorias = new ArrayList<>();
 
-    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Imagen> imagenes;
+
+    // Nueva relación: Un proyecto tiene muchos procesos de diseño
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProcesoDiseno> procesosDiseno = new ArrayList<>();
 }

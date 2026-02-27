@@ -11,10 +11,12 @@ import java.util.List;
 public class ProyectoDTO {
     private Long idProyecto;
     private String titulo;
+    private String subtitulo;
     private String descripcion;
     private Integer anio;
     
-    // Usamos DTOs en lugar de Entidades
     private List<CategoriaDTO> categorias;
     private List<ImagenDTO> imagenes;
+    // Añadimos la lista de los nuevos DTOs
+    private List<ProcesoDisenoDTO> procesosDiseno;
 }

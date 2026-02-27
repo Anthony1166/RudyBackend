@@ -37,6 +37,7 @@ public class ProyectoServicesImp implements ProyectoServices {
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con ID: " + id));
 
         proyecto.setTitulo(proyectoActualizado.getTitulo());
+        proyecto.setSubtitulo(proyectoActualizado.getSubtitulo()); // Campo añadido
         proyecto.setDescripcion(proyectoActualizado.getDescripcion());
         proyecto.setAnio(proyectoActualizado.getAnio());
         
