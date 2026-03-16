@@ -2,7 +2,6 @@ package portafolio.sami.rudy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +18,7 @@ public class Proyecto {
     
     private String titulo;
     private String subtitulo;
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
     private Integer anio;
 

@@ -1,6 +1,7 @@
 package portafolio.sami.rudy.servicesImp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,7 +18,7 @@ public class ProyectoServicesImp implements ProyectoServices {
 
     @Override
     public List<Proyecto> findAll() {
-        return proyectoRepository.findAll();
+        return proyectoRepository.findAll(Sort.by(Sort.Direction.ASC, "idProyecto"));
     }
 
     @Override
