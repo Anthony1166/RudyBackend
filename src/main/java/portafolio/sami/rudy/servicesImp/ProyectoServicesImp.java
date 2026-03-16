@@ -19,6 +19,7 @@ public class ProyectoServicesImp implements ProyectoServices {
     @Override
     public List<Proyecto> findAll() {
         return proyectoRepository.findAll(Sort.by(Sort.Direction.ASC, "idProyecto"));
+
     }
 
     @Override
