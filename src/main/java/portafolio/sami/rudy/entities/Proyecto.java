@@ -2,7 +2,9 @@ package portafolio.sami.rudy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Proyecto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +38,6 @@ public class Proyecto {
     @JsonIgnore
     private List<Imagen> imagenes;
 
-    // Nueva relación: Un proyecto tiene muchos procesos de diseño
     @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProcesoDiseno> procesosDiseno = new ArrayList<>();
 }

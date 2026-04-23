@@ -60,6 +60,7 @@ public class ProyectoController {
         List<Proyecto> proyectos = proyectoServices.filtrarPorCategoria(categoriaId);
         return proyectos.stream().map(p -> modelMapper.map(p, ProyectoDTO.class)).toList();
     }
+
     @GetMapping("/proyectosAnio/{anio}")
     public List<ProyectoDTO> listarPorAnio(@PathVariable Integer anio) {
         List<Proyecto> proyectos = proyectoServices.filtrarPorAnio(anio);

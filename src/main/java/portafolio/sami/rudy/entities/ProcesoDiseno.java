@@ -2,7 +2,9 @@ package portafolio.sami.rudy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -11,6 +13,8 @@ import lombok.Setter;
 })
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProcesoDiseno {
 
     @Id
@@ -20,19 +24,16 @@ public class ProcesoDiseno {
     @Column(nullable = false)
     private String titulo_fase;
 
-    // SOLUCIÓN: Reemplazar @Lob por @Column(columnDefinition = "TEXT")
-    // Esto le dice a Hibernate que use el tipo de dato TEXT de PostgreSQL,
-    // que no tiene la restricción del modo auto-commit.
     @Column(columnDefinition = "TEXT", nullable = false)
     private String descripcion;
 
-    private String imagen_proceso; // URL de la imagen de Cloudflare
+    private String imagen_proceso;
 
     @Column(nullable = false)
     private Integer orden;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proyecto_id", nullable = false)
-    @JsonIgnore // Esencial para evitar bucles infinitos al serializar
+    @JsonIgnore
     private Proyecto proyecto;
 }

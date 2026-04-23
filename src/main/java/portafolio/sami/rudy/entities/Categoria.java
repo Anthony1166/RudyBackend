@@ -2,15 +2,15 @@ package portafolio.sami.rudy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +18,7 @@ public class Categoria {
     
     private String nombre;
 
-    // Relación inversa: Una categoría está en muchos proyectos
     @ManyToMany(mappedBy = "categorias")
-    @JsonIgnore // Importante para evitar bucle infinito al serializar Proyecto -> Categorias -> Proyectos...
+    @JsonIgnore
     private List<Proyecto> proyectos;
 }

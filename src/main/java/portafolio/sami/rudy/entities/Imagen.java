@@ -2,14 +2,14 @@ package portafolio.sami.rudy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Imagen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

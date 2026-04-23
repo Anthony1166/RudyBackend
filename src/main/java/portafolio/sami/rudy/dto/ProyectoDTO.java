@@ -1,13 +1,16 @@
 package portafolio.sami.rudy.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProyectoDTO {
     private Long idProyecto;
     private String titulo;
@@ -17,6 +20,5 @@ public class ProyectoDTO {
     
     private List<CategoriaDTO> categorias;
     private List<ImagenDTO> imagenes;
-    // Añadimos la lista de los nuevos DTOs
     private List<ProcesoDisenoDTO> procesosDiseno;
 }

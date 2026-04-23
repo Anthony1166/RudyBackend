@@ -1,11 +1,15 @@
 package portafolio.sami.rudy.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import portafolio.sami.rudy.entities.Proyecto;
+
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImagenDTO {
     private Long id;
     private String imagen;
