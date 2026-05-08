@@ -14,7 +14,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 import portafolio.sami.rudy.security.jwt.JwtAuthenticationFilter;
+import portafolio.sami.rudy.security.jwt.JwtEntryPoint;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class SpringSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
+    private final JwtEntryPoint jwtEntryPoint = new JwtEntryPoint();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,13 +37,15 @@ public class SpringSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers(org.springframework.http.HttpMethod.GET, "/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sami/auth/check-auth").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/**").permitAll()
                                 .requestMatchers("/sami/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->
                         sessionManager
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

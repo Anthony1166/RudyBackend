@@ -25,31 +25,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public String authenticate(String username, String password) {
-        // --- INICIO DE LOGS DE DEPURACIÓN ---
-        System.out.println("\n--- INTENTO DE AUTENTICACIÓN ---");
-        System.out.println("Username recibido: '" + username + "'");
-        System.out.println("Password recibida: '" + password + "'");
-
-        try {
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("DEBUG: Usuario no encontrado en la BD."));
-
-            String storedEncodedPassword = user.getPassword();
-            System.out.println("Hash de la BD: " + storedEncodedPassword);
-
-            boolean passwordsMatch = passwordEncoder.matches(password, storedEncodedPassword);
-            System.out.println("¿Coinciden las contraseñas? -> " + passwordsMatch);
-
-            if (!passwordsMatch) {
-                System.out.println("!!! ALERTA: La comprobación manual de la contraseña ha fallado. !!!");
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error durante la comprobación manual: " + e.getMessage());
-        }
-        System.out.println("--- FIN DE LOGS DE DEPURACIÓN ---\n");
-        // --- FIN DE LOGS DE DEPURACIÓN ---
-
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(authToken);
         return jwtService.generateToken(authentication);

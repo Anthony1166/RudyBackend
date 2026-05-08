@@ -35,7 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             jwt = authorizationHeader.substring(7);
-            userName = jwtService.extractUsername(jwt);
+            try {
+                userName = jwtService.extractUsername(jwt);
+            } catch (Exception e) {
+                // Token malformado, expirado o con firma inválida.
+                // No seteamos contexto de autenticación → Spring Security bloqueará
+                // el acceso a endpoints protegidos con 403. No propagamos excepción (evita HTTP 500).
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
         if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = userService.loadUserByUsername(userName);
