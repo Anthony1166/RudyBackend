@@ -1,5 +1,6 @@
 package portafolio.sami.rudy.entities.prod;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,7 @@ public class ProcesoProducto {
     @Column(name = "orden_proc_prod", nullable = false)
     private Integer orden;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;

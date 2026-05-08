@@ -1,5 +1,6 @@
 package portafolio.sami.rudy.entities.prod;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class CategoriaProducto {
     @Column(name = "orden")
     private Integer orden = 0;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "categorias")
     private List<Producto> productos;
 }

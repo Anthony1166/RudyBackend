@@ -1,5 +1,6 @@
 package portafolio.sami.rudy.entities.prod;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class ImagenProducto {
     @Column(name = "texto_alternativo")
     private String textoAlternativo;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
