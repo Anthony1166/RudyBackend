@@ -14,6 +14,7 @@ import portafolio.sami.rudy.entities.prod.Producto;
 import portafolio.sami.rudy.repositories.prod.CategoriaProductoRepository;
 import portafolio.sami.rudy.repositories.prod.ProductoRepository;
 import portafolio.sami.rudy.services.prod.ProductoServices;
+import portafolio.sami.rudy.servicesImp.S3Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ public class ProductoServicesImp implements ProductoServices {
 
     private final ProductoRepository productoRepository;
     private final ModelMapper modelMapper;
-
     private final CategoriaProductoRepository categoriaRepository;
+    private final S3Service s3Service;
 
     private String generarSlug(String nombre) {
         return nombre.toLowerCase()
@@ -223,9 +224,25 @@ public class ProductoServicesImp implements ProductoServices {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        // Al borrar el producto, Spring Boot automáticamente limpiará la tabla intermedia
-        // de categorías y borrará las imágenes/procesos asociados gracias al cascade=ALL.
+        // Limpiar archivos de R2 antes de borrar de la BD
+        for (ImagenProducto img : producto.getImagenes()) {
+            borrarArchivoR2(img.getUrlImagen());
+        }
+        for (ProcesoProducto proc : producto.getProcesos()) {
+            borrarArchivoR2(proc.getUrlImagen());
+        }
+
         productoRepository.delete(producto);
+    }
+
+    private void borrarArchivoR2(String url) {
+        if (url == null || url.isBlank()) return;
+        try {
+            String fileName = url.substring(url.lastIndexOf("/") + 1);
+            s3Service.deleteFile(fileName);
+        } catch (Exception ignored) {
+            // Si el archivo ya no existe en R2, continuamos sin interrumpir el borrado
+        }
     }
 
 
