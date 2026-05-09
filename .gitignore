@@ -35,3 +35,8 @@ build/
 
 # Ignorar el archivo de perfil local que contiene secretos
 /src/main/resources/application-local.properties
+
+# Archivos de entorno y secretos
+.env
+.env.*
+*.env
