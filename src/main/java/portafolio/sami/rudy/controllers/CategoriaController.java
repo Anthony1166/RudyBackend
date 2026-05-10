@@ -1,57 +1,47 @@
 package portafolio.sami.rudy.controllers;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import portafolio.sami.rudy.dto.CategoriaDTO;
-import portafolio.sami.rudy.entities.Categoria;
-import portafolio.sami.rudy.services.CategoriaServices;
+import portafolio.sami.rudy.dto.proy.CategoriaProyectoDTO;
+import portafolio.sami.rudy.services.proy.CategoriaProyectoServices;
 
-import java.util.Arrays;
 import java.util.List;
 
+// Endpoints legacy — mantenidos para compatibilidad con el frontend actual (Phase 5 los migrará)
 @RestController
 @RequestMapping("/sami")
+@RequiredArgsConstructor
 public class CategoriaController {
-    @Autowired
-    private CategoriaServices categoriaServices;
-    @Autowired
-    private ModelMapper modelMapper;
+
+    private final CategoriaProyectoServices categoriaServices;
 
     @GetMapping("/categorias")
-    public List<CategoriaDTO> listarCategorias(){
-        List<Categoria> categorias = categoriaServices.listarCategorias();
-        List<CategoriaDTO> categoriasDTO = Arrays.asList(modelMapper.map(categorias, CategoriaDTO[].class));
-        return categoriasDTO;
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
-    @PostMapping("/categoria")
-    public CategoriaDTO registraCategoria(@RequestBody CategoriaDTO categoriaDTO) {
-        Categoria categoria = modelMapper.map(categoriaDTO, Categoria.class);
-        categoria = categoriaServices.registerCategoria(categoria);
-        categoriaDTO  = modelMapper.map(categoria, CategoriaDTO.class);
-        return categoriaDTO;
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
-    @PutMapping("/categoria/{id}")
-    public CategoriaDTO actualizarCategoria(@PathVariable Long id ,@RequestBody CategoriaDTO categoriaDTO) {
-        Categoria categoria = modelMapper.map(categoriaDTO, Categoria.class);
-        categoria=categoriaServices.actualizarCategoria(id, categoria);
-        categoriaDTO  = modelMapper.map(categoria, CategoriaDTO.class);
-        return categoriaDTO;
+    public List<CategoriaProyectoDTO> listarCategorias() {
+        return categoriaServices.listarTodas();
     }
 
     @GetMapping("/categoria/{id}")
-    public CategoriaDTO buscarCategoriaId(@PathVariable Long id) {
-        Categoria categoria = categoriaServices.buscarCategoriaId(id);
-        CategoriaDTO categoriaDTO = modelMapper.map(categoria, CategoriaDTO.class);
-        return categoriaDTO;
+    public CategoriaProyectoDTO buscarCategoriaId(@PathVariable Long id) {
+        return categoriaServices.obtenerPorId(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Usando hasAuthority para mayor claridad
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/categoria")
+    public CategoriaProyectoDTO registraCategoria(@Valid @RequestBody CategoriaProyectoDTO categoriaDTO) {
+        return categoriaServices.guardar(categoriaDTO);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("/categoria/{id}")
+    public CategoriaProyectoDTO actualizarCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaProyectoDTO categoriaDTO) {
+        return categoriaServices.actualizar(id, categoriaDTO);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/categoria/{id}")
-    public void eliminarCategoria(@PathVariable Long id) { categoriaServices.eliminarCategoria(id); }
+    public void eliminarCategoria(@PathVariable Long id) {
+        categoriaServices.eliminarFisico(id);
+    }
 }

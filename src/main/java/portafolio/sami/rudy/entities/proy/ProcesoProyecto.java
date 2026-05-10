@@ -1,4 +1,4 @@
-package portafolio.sami.rudy.entities;
+package portafolio.sami.rudy.entities.proy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,19 +15,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProcesoDiseno {
+public class ProcesoProyecto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String titulo_fase;
+    @Column(name = "titulo_fase", nullable = false)
+    private String titulo;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String descripcion;
 
-    private String imagen_proceso;
+    @Column(name = "imagen_proceso")
+    private String urlImagen;
 
     @Column(nullable = false)
     private Integer orden;

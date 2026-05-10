@@ -1,4 +1,4 @@
-package portafolio.sami.rudy.entities;
+package portafolio.sami.rudy.entities.proy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +18,21 @@ public class Proyecto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProyecto;
-    
+
     private String titulo;
     private String subtitulo;
     @Column(columnDefinition = "TEXT")
     private String descripcion;
     private Integer anio;
+
+    @Column(name = "slug", unique = true)
+    private String slug;
+
+    @Column(name = "activo")
+    private Boolean activo = true;
+
+    @Column(name = "orden")
+    private Integer orden = 0;
 
     @ManyToMany
     @JoinTable(
@@ -32,12 +40,12 @@ public class Proyecto {
         joinColumns = @JoinColumn(name = "proyecto_id"),
         inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
-    private List<Categoria> categorias = new ArrayList<>();
+    private List<CategoriaProyecto> categorias = new ArrayList<>();
 
     @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Imagen> imagenes;
+    private List<ImagenProyecto> imagenes = new ArrayList<>();
 
     @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProcesoDiseno> procesosDiseno = new ArrayList<>();
+    private List<ProcesoProyecto> procesosDiseno = new ArrayList<>();
 }
