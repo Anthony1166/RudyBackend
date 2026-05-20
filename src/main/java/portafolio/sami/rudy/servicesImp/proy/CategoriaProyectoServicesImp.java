@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import portafolio.sami.rudy.dto.proy.CategoriaProyectoDTO;
 import portafolio.sami.rudy.entities.proy.CategoriaProyecto;
 import portafolio.sami.rudy.repositories.proy.CategoriaProyectoRepository;
+import portafolio.sami.rudy.exceptions.BusinessException;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.proy.CategoriaProyectoServices;
 
 import java.util.List;
@@ -51,7 +53,7 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
     @Transactional(readOnly = true)
     public CategoriaProyectoDTO obtenerPorId(Long id) {
         CategoriaProyecto categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
         return modelMapper.map(categoria, CategoriaProyectoDTO.class);
     }
 
@@ -78,7 +80,7 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
         boolean slugOcupado = categoriaRepository.findBySlug(slugPropuesto).isPresent();
 
         if (nombreOcupado || slugOcupado) {
-            throw new RuntimeException("Ya tienes una categoría con este nombre. Por favor, elige otro.");
+            throw new BusinessException("Ya tienes una categoría con este nombre. Por favor, elige otro.");
         }
 
         CategoriaProyecto categoria = modelMapper.map(categoriaDTO, CategoriaProyecto.class);
@@ -97,7 +99,7 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
     @Transactional
     public CategoriaProyectoDTO actualizar(Long id, CategoriaProyectoDTO categoriaDTO) {
         CategoriaProyecto existente = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
         if (!existente.getNombre().equalsIgnoreCase(categoriaDTO.getNombre())) {
             String nuevoSlug = generarSlug(categoriaDTO.getNombre());
@@ -108,7 +110,7 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
                     .isPresent();
 
             if (nombreOcupado || slugOcupado) {
-                throw new RuntimeException("Ya tienes otra categoría con este nombre o URL. Por favor, elige otro.");
+                throw new BusinessException("Ya tienes otra categoría con este nombre o URL. Por favor, elige otro.");
             }
 
             existente.setSlug(nuevoSlug);
@@ -132,7 +134,7 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
     @Transactional
     public void eliminarLogico(Long id) {
         CategoriaProyecto categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
         categoria.setActivo(false);
         categoriaRepository.save(categoria);
     }
@@ -141,7 +143,7 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
     @Transactional
     public void eliminarFisico(Long id) {
         CategoriaProyecto categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
         if (categoria.getProyectos() != null) {
             categoria.getProyectos().forEach(proyecto -> {

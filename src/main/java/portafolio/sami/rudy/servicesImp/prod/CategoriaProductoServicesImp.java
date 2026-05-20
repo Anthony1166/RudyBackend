@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import portafolio.sami.rudy.dto.prod.CategoriaProductoDTO;
 import portafolio.sami.rudy.entities.prod.CategoriaProducto;
 import portafolio.sami.rudy.repositories.prod.CategoriaProductoRepository;
+import portafolio.sami.rudy.exceptions.BusinessException;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.prod.CategoriaProductoServices;
 
 import java.util.List;
@@ -55,7 +57,7 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
     @Transactional(readOnly = true)
     public CategoriaProductoDTO obtenerPorId(Long id) {
         CategoriaProducto categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
         return modelMapper.map(categoria, CategoriaProductoDTO.class);
     }
 
@@ -87,7 +89,7 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
 
         if (nombreOcupado || slugOcupado) {
             // 🔥 ESTO ES LO QUE DISPARA EL CUADRO ROJO EN ANGULAR
-            throw new RuntimeException("Ya tienes una categoría con este nombre. Por favor, elige otro.");
+            throw new BusinessException("Ya tienes una categoría con este nombre. Por favor, elige otro.");
         }
 
         // 3. Si todo está libre, procedemos a guardar normalmente
@@ -107,7 +109,7 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
     @Transactional
     public CategoriaProductoDTO actualizar(Long id, CategoriaProductoDTO categoriaDTO) {
         CategoriaProducto existente = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
         // Si el nombre cambió, validamos a fondo
         if (!existente.getNombre().equalsIgnoreCase(categoriaDTO.getNombre())) {
@@ -121,7 +123,7 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
 
             if (nombreOcupado || slugOcupado) {
                 // Usamos la propiedad "mensaje" para que Angular atrape exactamente este texto
-                throw new RuntimeException("Ya tienes otra categoría con este nombre o URL. Por favor, elige otro.");
+                throw new BusinessException("Ya tienes otra categoría con este nombre o URL. Por favor, elige otro.");
             }
 
             // Si todo está libre, actualizamos el slug
@@ -150,7 +152,7 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
     @Transactional
     public void eliminarLogico(Long id) {
         CategoriaProducto categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
         // Solo la "apagamos", Sami la puede volver a prender luego si quiere
         categoria.setActivo(false);
@@ -161,7 +163,7 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
     @Transactional
     public void eliminarFisico(Long id) {
         CategoriaProducto categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
 
         // 🔥 MAGIA ANTI-ERRORES: Si la categoría tiene productos, los soltamos primero
         // Esto evita que PostgreSQL explote por intentar borrar algo que está en uso.

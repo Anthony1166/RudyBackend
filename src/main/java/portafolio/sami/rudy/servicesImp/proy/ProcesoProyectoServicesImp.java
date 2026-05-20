@@ -9,6 +9,7 @@ import portafolio.sami.rudy.entities.proy.ProcesoProyecto;
 import portafolio.sami.rudy.entities.proy.Proyecto;
 import portafolio.sami.rudy.repositories.proy.ProcesoProyectoRepository;
 import portafolio.sami.rudy.repositories.proy.ProyectoRepository;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.proy.ProcesoProyectoServices;
 import portafolio.sami.rudy.servicesImp.S3Service;
 
@@ -36,7 +37,7 @@ public class ProcesoProyectoServicesImp implements ProcesoProyectoServices {
     @Transactional(readOnly = true)
     public ProcesoProyectoDTO obtenerPorId(Long id) {
         ProcesoProyecto proceso = procesoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proceso no encontrado con el ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Proceso no encontrado con el ID: " + id));
         return modelMapper.map(proceso, ProcesoProyectoDTO.class);
     }
 
@@ -44,7 +45,7 @@ public class ProcesoProyectoServicesImp implements ProcesoProyectoServices {
     @Transactional
     public ProcesoProyectoDTO agregarAProyecto(Long proyectoId, ProcesoProyectoDTO dto) {
         Proyecto proyecto = proyectoRepository.findById(proyectoId)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado"));
 
         ProcesoProyecto proceso = modelMapper.map(dto, ProcesoProyecto.class);
         proceso.setProyecto(proyecto);
@@ -61,7 +62,7 @@ public class ProcesoProyectoServicesImp implements ProcesoProyectoServices {
     @Transactional
     public ProcesoProyectoDTO actualizar(Long id, ProcesoProyectoDTO dto) {
         ProcesoProyecto existente = procesoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proceso no encontrado con el ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Proceso no encontrado con el ID: " + id));
 
         Long proyectoId = existente.getProyecto().getIdProyecto();
 
@@ -98,7 +99,7 @@ public class ProcesoProyectoServicesImp implements ProcesoProyectoServices {
     @Transactional
     public void eliminar(Long id) {
         ProcesoProyecto proceso = procesoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proceso no encontrado con el ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Proceso no encontrado con el ID: " + id));
         borrarArchivoS3(proceso.getUrlImagen());
         procesoRepository.delete(proceso);
     }

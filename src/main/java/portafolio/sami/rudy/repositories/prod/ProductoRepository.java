@@ -18,7 +18,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     List<Producto> findAllByOrderByOrdenAsc();
 
-
     Optional<Producto> findBySlug(String slug);
 
     List<Producto> findByCategorias_SlugAndActivoTrueOrderByOrdenAsc(String categoriaSlug);
@@ -29,10 +28,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     List<Producto> findByOrdenBetween(Integer inicio, Integer fin);
 
-
-    // 🔥 EL NIVEL DIOS: Búsqueda difusa (Fuzzy Search)
-    // Busca si el término se parece al nombre o a la descripción (umbral de similitud > 0.1)
-    // Y además incluye ILIKE por si escribe solo una parte de la palabra.
     @Query(value = "SELECT * FROM productos WHERE activo = true AND " +
             "(nombre ILIKE %:termino% OR descripcion ILIKE %:termino% OR " +
             "similarity(nombre, :termino) > 0.1) " +

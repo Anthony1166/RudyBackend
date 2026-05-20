@@ -38,6 +38,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers(HttpMethod.GET, "/sami/auth/check-auth").authenticated()
+                                .requestMatchers("/actuator/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/**").permitAll()
                                 .requestMatchers("/sami/auth/**").permitAll()
                                 .anyRequest().authenticated()

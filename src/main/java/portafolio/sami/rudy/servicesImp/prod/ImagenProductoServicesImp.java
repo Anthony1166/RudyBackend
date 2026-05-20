@@ -10,6 +10,7 @@ import portafolio.sami.rudy.entities.prod.ImagenProducto;
 import portafolio.sami.rudy.entities.prod.Producto;
 import portafolio.sami.rudy.repositories.prod.ImagenProductoRepository;
 import portafolio.sami.rudy.repositories.prod.ProductoRepository;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.prod.ImagenProductoServices;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class ImagenProductoServicesImp implements ImagenProductoServices {
     @Transactional
     public ImagenProductoDTO agregarAProducto(Long productoId, ImagenProductoDTO dto) {
         Producto producto = productoRepository.findById(productoId)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         ImagenProducto imagen = modelMapper.map(dto, ImagenProducto.class);
         imagen.setProducto(producto);
@@ -69,7 +70,7 @@ public class ImagenProductoServicesImp implements ImagenProductoServices {
     @Transactional
     public ImagenProductoDTO actualizar(Long id, ImagenProductoDTO dto) {
         ImagenProducto existente = imagenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada"));
 
         Long productoId = existente.getProducto().getId();
 
@@ -108,7 +109,7 @@ public class ImagenProductoServicesImp implements ImagenProductoServices {
     @Transactional
     public void eliminar(Long id) {
         ImagenProducto imagen = imagenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada"));
         imagenRepository.delete(imagen); // Destrucción física
     }
 

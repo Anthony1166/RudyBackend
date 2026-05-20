@@ -9,6 +9,7 @@ import portafolio.sami.rudy.entities.prod.ProcesoProducto;
 import portafolio.sami.rudy.entities.prod.Producto;
 import portafolio.sami.rudy.repositories.prod.ProcesoProductoRepository;
 import portafolio.sami.rudy.repositories.prod.ProductoRepository;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.prod.ProcesoProductoServices;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ProcesoProductoServicesImp implements ProcesoProductoServices {
     @Transactional
     public ProcesoProductoDTO agregarAProducto(Long productoId, ProcesoProductoDTO dto) {
         Producto producto = productoRepository.findById(productoId)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         ProcesoProducto proceso = modelMapper.map(dto, ProcesoProducto.class);
         proceso.setProducto(producto);
@@ -53,7 +54,7 @@ public class ProcesoProductoServicesImp implements ProcesoProductoServices {
     @Transactional
     public ProcesoProductoDTO actualizar(Long id, ProcesoProductoDTO dto) {
         ProcesoProducto existente = procesoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paso de proceso no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paso de proceso no encontrado"));
 
         Long productoId = existente.getProducto().getId();
 
@@ -86,7 +87,7 @@ public class ProcesoProductoServicesImp implements ProcesoProductoServices {
     @Transactional
     public void eliminar(Long id) {
         ProcesoProducto proceso = procesoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paso de proceso no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paso de proceso no encontrado"));
         procesoRepository.delete(proceso);
     }
 

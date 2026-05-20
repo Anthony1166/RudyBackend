@@ -12,6 +12,7 @@ import portafolio.sami.rudy.entities.prod.ImagenProducto;
 import portafolio.sami.rudy.entities.prod.ProcesoProducto;
 import portafolio.sami.rudy.entities.prod.Producto;
 import portafolio.sami.rudy.repositories.prod.CategoriaProductoRepository;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.repositories.prod.ProductoRepository;
 import portafolio.sami.rudy.services.prod.ProductoServices;
 import portafolio.sami.rudy.servicesImp.S3Service;
@@ -64,7 +65,7 @@ public class ProductoServicesImp implements ProductoServices {
     @Transactional(readOnly = true)
     public ProductoDTO obtenerPorId(Long id) {
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con el ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el ID: " + id));
         return modelMapper.map(producto, ProductoDTO.class);
     }
 
@@ -114,7 +115,7 @@ public class ProductoServicesImp implements ProductoServices {
         if (productoDTO.getCategorias() != null && !productoDTO.getCategorias().isEmpty()) {
             List<CategoriaProducto> categoriasReales = productoDTO.getCategorias().stream()
                     .map(cat -> categoriaRepository.findById(cat.getId())
-                            .orElseThrow(() -> new RuntimeException("Categoría no encontrada")))
+                            .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada")))
                     .collect(Collectors.toList());
             producto.setCategorias(categoriasReales);
         } else {
@@ -129,7 +130,7 @@ public class ProductoServicesImp implements ProductoServices {
     @Transactional
     public ProductoDTO actualizar(Long id, ProductoDTO productoDTO) {
         Producto existente = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         // 1. RESCATE DE DATOS ORIGINALES
         Integer ordenOriginal = existente.getOrden();
@@ -170,7 +171,7 @@ public class ProductoServicesImp implements ProductoServices {
         if (categoriasNuevas != null && !categoriasNuevas.isEmpty()) {
             List<CategoriaProducto> categoriasReales = categoriasNuevas.stream()
                     .map(catDTO -> categoriaRepository.findById(catDTO.getId())
-                            .orElseThrow(() -> new RuntimeException("Categoría no encontrada")))
+                            .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada")))
                     .collect(Collectors.toList());
             existente.setCategorias(categoriasReales);
         } else {
@@ -204,7 +205,7 @@ public class ProductoServicesImp implements ProductoServices {
     @Transactional(readOnly = true)
     public ProductoDTO obtenerPorSlug(String slug) {
         Producto producto = productoRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con el slug: " + slug));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con el slug: " + slug));
         return modelMapper.map(producto, ProductoDTO.class);
     }
 
@@ -212,7 +213,7 @@ public class ProductoServicesImp implements ProductoServices {
     @Transactional
     public void eliminarLogico(Long id) {
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         // ¡El salvavidas! Solo lo apagamos, no hacemos productoRepository.delete(producto)
         producto.setActivo(!producto.getActivo());
@@ -222,7 +223,7 @@ public class ProductoServicesImp implements ProductoServices {
     @Transactional
     public void eliminarFisico(Long id) {
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
         // Limpiar archivos de R2 antes de borrar de la BD
         for (ImagenProducto img : producto.getImagenes()) {

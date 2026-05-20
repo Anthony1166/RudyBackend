@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import portafolio.sami.rudy.security.auth.dtos.RegisterUser;
 import portafolio.sami.rudy.security.entities.Role;
 import portafolio.sami.rudy.security.entities.User;
 import portafolio.sami.rudy.security.jwt.JwtService;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.security.entities.repositories.RoleRepository;
 import portafolio.sami.rudy.security.entities.repositories.UserRepository;
 
@@ -30,8 +30,8 @@ public class AuthService {
         return jwtService.generateToken(authentication);
     }
 
-    public void registerUser(RegisterUser registerUser){
-        if (userRepository.existsByUsername(registerUser.getUsername())){
+    public void registerUser(RegisterUser registerUser) {
+        if (userRepository.existsByUsername(registerUser.getUsername())) {
             throw new IllegalArgumentException("El nombre de usuario ya existe");
         }
         if (userRepository.existsByEmail(registerUser.getEmail())) {
@@ -42,15 +42,14 @@ public class AuthService {
         }
 
         Role roleUser = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Rol 'USER' no encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Rol 'USER' no encontrado."));
 
         User user = new User(
                 registerUser.getUsername(),
                 passwordEncoder.encode(registerUser.getPassword()),
                 registerUser.getEmail(),
                 registerUser.getPhone(),
-                roleUser
-        );
+                roleUser);
         userRepository.save(user);
     }
 }

@@ -12,6 +12,7 @@ import portafolio.sami.rudy.entities.proy.CategoriaProyecto;
 import portafolio.sami.rudy.entities.proy.Proyecto;
 import portafolio.sami.rudy.repositories.proy.CategoriaProyectoRepository;
 import portafolio.sami.rudy.repositories.proy.ProyectoRepository;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.proy.ProyectoServices;
 import portafolio.sami.rudy.servicesImp.S3Service;
 
@@ -62,7 +63,7 @@ public class ProyectoServicesImp implements ProyectoServices {
     @Transactional(readOnly = true)
     public ProyectoDTO obtenerPorId(Long id) {
         Proyecto proyecto = proyectoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con el ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado con el ID: " + id));
         return modelMapper.map(proyecto, ProyectoDTO.class);
     }
 
@@ -70,7 +71,7 @@ public class ProyectoServicesImp implements ProyectoServices {
     @Transactional(readOnly = true)
     public ProyectoDTO obtenerPorSlug(String slug) {
         Proyecto proyecto = proyectoRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con el slug: " + slug));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado con el slug: " + slug));
         return modelMapper.map(proyecto, ProyectoDTO.class);
     }
 
@@ -126,7 +127,7 @@ public class ProyectoServicesImp implements ProyectoServices {
         if (proyectoDTO.getCategorias() != null && !proyectoDTO.getCategorias().isEmpty()) {
             List<CategoriaProyecto> categoriasReales = proyectoDTO.getCategorias().stream()
                     .map(cat -> categoriaRepository.findById(cat.getIdCategoria())
-                            .orElseThrow(() -> new RuntimeException("Categoría no encontrada")))
+                            .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada")))
                     .collect(Collectors.toList());
             proyecto.setCategorias(categoriasReales);
         } else {
@@ -141,7 +142,7 @@ public class ProyectoServicesImp implements ProyectoServices {
     @Transactional
     public ProyectoDTO actualizar(Long id, ProyectoDTO proyectoDTO) {
         Proyecto existente = proyectoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado"));
 
         // 1. Rescate de datos originales
         Integer ordenOriginal = existente.getOrden();
@@ -174,7 +175,7 @@ public class ProyectoServicesImp implements ProyectoServices {
         if (categoriasNuevas != null && !categoriasNuevas.isEmpty()) {
             List<CategoriaProyecto> categoriasReales = categoriasNuevas.stream()
                     .map(cat -> categoriaRepository.findById(cat.getIdCategoria())
-                            .orElseThrow(() -> new RuntimeException("Categoría no encontrada")))
+                            .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada")))
                     .collect(Collectors.toList());
             existente.setCategorias(categoriasReales);
         } else {
@@ -189,7 +190,7 @@ public class ProyectoServicesImp implements ProyectoServices {
     @Transactional
     public void eliminarLogico(Long id) {
         Proyecto proyecto = proyectoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado"));
         proyecto.setActivo(!proyecto.getActivo());
         proyectoRepository.save(proyecto);
     }
@@ -198,7 +199,7 @@ public class ProyectoServicesImp implements ProyectoServices {
     @Transactional
     public void eliminarFisico(Long id) {
         Proyecto proyecto = proyectoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado"));
 
         for (ImagenProyecto img : proyecto.getImagenes()) {
             borrarArchivoS3(img.getUrlImagen());

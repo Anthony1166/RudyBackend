@@ -11,6 +11,7 @@ import portafolio.sami.rudy.entities.proy.ImagenProyecto;
 import portafolio.sami.rudy.entities.proy.Proyecto;
 import portafolio.sami.rudy.repositories.proy.ImagenProyectoRepository;
 import portafolio.sami.rudy.repositories.proy.ProyectoRepository;
+import portafolio.sami.rudy.exceptions.ResourceNotFoundException;
 import portafolio.sami.rudy.services.proy.ImagenProyectoServices;
 import portafolio.sami.rudy.servicesImp.S3Service;
 
@@ -56,7 +57,7 @@ public class ImagenProyectoServicesImp implements ImagenProyectoServices {
     @Transactional
     public ImagenProyectoDTO agregarAProyecto(Long proyectoId, ImagenProyectoDTO dto) {
         Proyecto proyecto = proyectoRepository.findById(proyectoId)
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Proyecto no encontrado"));
 
         ImagenProyecto imagen = modelMapper.map(dto, ImagenProyecto.class);
         imagen.setProyecto(proyecto);
@@ -76,7 +77,7 @@ public class ImagenProyectoServicesImp implements ImagenProyectoServices {
     @Transactional
     public ImagenProyectoDTO actualizar(Long id, ImagenProyectoDTO dto) {
         ImagenProyecto existente = imagenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada"));
 
         Long proyectoId = existente.getProyecto().getIdProyecto();
 
@@ -116,7 +117,7 @@ public class ImagenProyectoServicesImp implements ImagenProyectoServices {
     @Transactional
     public void eliminar(Long id) {
         ImagenProyecto imagen = imagenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada"));
         borrarArchivoS3(imagen.getUrlImagen());
         imagenRepository.delete(imagen);
     }
