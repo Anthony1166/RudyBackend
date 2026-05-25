@@ -6,17 +6,11 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          proxy_host: ${{ secrets.SSH_HOST }}
-          script: |
-            cd /opt/apps/RudyBackend
-            git pull
-            mvn clean package -DskipTests
-            sudo systemctl restart rudy
+        run: |
+          cd /opt/apps/RudyBackend
+          git pull
+          mvn clean package -DskipTests
+          sudo systemctl restart rudy
