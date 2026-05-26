@@ -141,6 +141,14 @@ public class CategoriaProductoServicesImp implements CategoriaProductoServices {
             existente.setActivo(categoriaDTO.getActivo());
         }
 
+        // Ajustes de imagen (punto focal + zoom + rotar/voltear)
+        existente.setPosX(categoriaDTO.getPosX());
+        existente.setPosY(categoriaDTO.getPosY());
+        existente.setEscala(categoriaDTO.getEscala());
+        existente.setRotacion(categoriaDTO.getRotacion());
+        existente.setVolteoH(categoriaDTO.getVolteoH());
+        existente.setVolteoV(categoriaDTO.getVolteoV());
+
         // 🔥 EL SECRETO: Al no tocar `existente.setOrden(...)`,
         // Hibernate mantiene intacto el orden original en la base de datos.
 

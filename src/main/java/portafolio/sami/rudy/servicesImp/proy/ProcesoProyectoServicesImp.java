@@ -74,6 +74,14 @@ public class ProcesoProyectoServicesImp implements ProcesoProyectoServices {
         existente.setDescripcion(dto.getDescripcion());
         existente.setUrlImagen(dto.getUrlImagen());
 
+        // Ajustes de imagen (punto focal + zoom + rotar/voltear)
+        existente.setPosX(dto.getPosX());
+        existente.setPosY(dto.getPosY());
+        existente.setEscala(dto.getEscala());
+        existente.setRotacion(dto.getRotacion());
+        existente.setVolteoH(dto.getVolteoH());
+        existente.setVolteoV(dto.getVolteoV());
+
         Integer ordenAntiguo = existente.getOrden();
         Integer ordenNuevo = dto.getOrden();
 

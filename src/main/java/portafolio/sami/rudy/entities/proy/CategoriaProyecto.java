@@ -36,6 +36,24 @@ public class CategoriaProyecto {
     @Column(name = "orden")
     private Integer orden = 0;
 
+    @Column(name = "pos_x")
+    private Double posX;
+
+    @Column(name = "pos_y")
+    private Double posY;
+
+    @Column(name = "escala")
+    private Double escala;
+
+    @Column(name = "rotacion")
+    private Integer rotacion;
+
+    @Column(name = "volteo_h")
+    private Boolean volteoH;
+
+    @Column(name = "volteo_v")
+    private Boolean volteoV;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "categorias")
     private List<Proyecto> proyectos;

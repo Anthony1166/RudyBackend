@@ -84,6 +84,14 @@ public class ImagenProyectoServicesImp implements ImagenProyectoServices {
         existente.setUrlImagen(dto.getUrlImagen());
         existente.setTextoAlternativo(dto.getTextoAlternativo());
 
+        // Ajustes de imagen (punto focal + zoom + rotar/voltear)
+        existente.setPosX(dto.getPosX());
+        existente.setPosY(dto.getPosY());
+        existente.setEscala(dto.getEscala());
+        existente.setRotacion(dto.getRotacion());
+        existente.setVolteoH(dto.getVolteoH());
+        existente.setVolteoV(dto.getVolteoV());
+
         // Gestión de portada
         if (dto.getEsPortada() != null && !dto.getEsPortada().equals(existente.getEsPortada())) {
             gestionarPortada(proyectoId, dto.getEsPortada());

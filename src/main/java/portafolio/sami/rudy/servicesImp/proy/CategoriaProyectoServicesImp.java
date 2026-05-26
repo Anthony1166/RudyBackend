@@ -126,6 +126,14 @@ public class CategoriaProyectoServicesImp implements CategoriaProyectoServices {
             existente.setActivo(categoriaDTO.getActivo());
         }
 
+        // Ajustes de imagen (punto focal + zoom + rotar/voltear)
+        existente.setPosX(categoriaDTO.getPosX());
+        existente.setPosY(categoriaDTO.getPosY());
+        existente.setEscala(categoriaDTO.getEscala());
+        existente.setRotacion(categoriaDTO.getRotacion());
+        existente.setVolteoH(categoriaDTO.getVolteoH());
+        existente.setVolteoV(categoriaDTO.getVolteoV());
+
         CategoriaProyecto actualizada = categoriaRepository.save(existente);
         return modelMapper.map(actualizada, CategoriaProyectoDTO.class);
     }
